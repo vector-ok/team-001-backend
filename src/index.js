@@ -1,11 +1,8 @@
-import app from './app';
+const http = require('http');
+// const app = require('./app');
 
-const startApp = async () => {
-  const header = document.querySelector('[data-app-name]');
-  if (!header) return;
+const server = http.createServer((req, res) => {
+  res.end('All good. Local server is up and running!');
+});
 
-  const programName = await app();
-  header.textContent = programName;
-};
-
-document.addEventListener('DOMContentLoaded', startApp);
+server.listen(process.env.PORT || 4000);

@@ -7,8 +7,7 @@
     "boilerplate"
   ],
   "private": false,
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "server",
   "directories": {
     "test": "__tests__"
   },
