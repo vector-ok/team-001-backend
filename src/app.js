@@ -43,4 +43,10 @@ app.use('/api/announcement', announceRoute);
 app.use('/api/auth', userRoute);
 app.use('/api/auth', adminRoute);
 
+app.use('/', (req, res) => {
+  res.json({
+    message: 'This is the backend for Betalife app!'
+  });
+});
+
 module.exports = app;
