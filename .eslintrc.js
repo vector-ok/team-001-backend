@@ -16,6 +16,7 @@ module.exports = {
   },
   rules: {
     'comma-dangle': ['error', 'never'],
+    'no-underscore-dangle':  ["error", {'allow': ['_id']}],
     'no-param-reassign': ['error', { props: false }]
   }
 };
