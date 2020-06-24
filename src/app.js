@@ -35,7 +35,6 @@ app.use((req, res, next) => {
 
 app.use(bodyParser.json());
 
-
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
 app.use('/api/events', eventRoute);
@@ -43,12 +42,5 @@ app.use('/api/funds', fundRoute);
 app.use('/api/announcement', announceRoute);
 app.use('/api/auth', userRoute);
 app.use('/api/auth', adminRoute);
-
-
-// app.use((req, res) => {
-//   res.json({
-//     message: 'Express app request was successful!'
-//   });
-// });
 
 module.exports = app;
