@@ -1,7 +1,7 @@
-import app from '../src/app';
+import router from '../src/routes/user';
 
 describe('app module', () => {
-  test('it exists', async () => {
-    await expect(app).toBeDefined();
+  test('it exists', () => {
+    expect(router).toBeDefined();
   });
 });

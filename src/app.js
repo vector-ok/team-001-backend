@@ -3,7 +3,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const path = require('path');
-// const app = async () => '#BuildforSDG';
+require('dotenv').config();
+// const app = async () => '#BuildforSDG'
 
 const eventRoute = require('./routes/events');
 const fundRoute = require('./routes/funds');
@@ -13,7 +14,9 @@ const adminRoute = require('./routes/admin');
 
 const app = express();
 
-mongoose.connect('mongodb+srv://victor:OENo3sfOcMPUGVnL@cluster0.n5fdl.mongodb.net/Cluster0?retryWrites=true&w=majority', { useNewUrlParser: true })
+const CONNECTION_STRING = process.env.STRING;
+
+mongoose.connect(CONNECTION_STRING, { useNewUrlParser: true })
   .then(() => {
     console.log('Successfully connected to database MongoDB Atlas!');
   })
