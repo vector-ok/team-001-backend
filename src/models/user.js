@@ -9,7 +9,7 @@ const userSchema = mongoose.Schema({
     type: String, required: true, min: 2, max: 50
   },
   phoneNumber: {
-    type: Number, required: false, min: 6, max: 13
+    type: String, required: false, min: 5, max: 14
   },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
