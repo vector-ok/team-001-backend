@@ -12,6 +12,7 @@ exports.signup = (req, res) => {
         email: req.body.email,
         password: hash,
         city: req.body.city,
+        org: req.body.org,
         dobirth: req.body.doBirth,
         sex: req.body.sex,
         imageurl: req.body.imageUrl,
