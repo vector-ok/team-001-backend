@@ -14,7 +14,7 @@ const userSchema = mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   city: { type: String, required: false },
-  org: { type: String, required: false },
+  orgName: { type: String, required: false },
   doBirth: { type: Date, required: false },
   sex: { type: String, required: false },
   imageUrl: { type: String, required: false },
