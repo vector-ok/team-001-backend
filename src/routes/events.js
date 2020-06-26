@@ -15,7 +15,7 @@ router.post('/', auth, multer, eventCtrl.createEvent);
 router.put('/:id', auth, multer, eventCtrl.updateEvent);
 
 // delete one event
-router.delete('/:id', eventCtrl.deleteEvent);
+router.delete('/:id', auth, eventCtrl.deleteEvent);
 
 // get one event by id
 router.get('/:id', eventCtrl.getOneEvent);

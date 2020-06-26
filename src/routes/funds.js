@@ -10,15 +10,15 @@ const FundCtrl = require('../controllers/funds');
 router.post('/', auth, FundCtrl.createFund);
 
 // update a fund
-router.put('/:id', FundCtrl.updateFund);
+router.put('/:id', auth, FundCtrl.updateFund);
 
 // delete one fund
 router.delete('/:id', auth, FundCtrl.deleteFund);
 
 // get one fund by id
-router.get('/:id', auth, FundCtrl.getOnefund);
+router.get('/:id', FundCtrl.getOnefund);
 
 // get all funds middleware
-router.get('/', auth, FundCtrl.getAllFunds);
+router.get('/', FundCtrl.getAllFunds);
 
 module.exports = router;

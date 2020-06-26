@@ -16,9 +16,9 @@ router.put('/:id', auth, announceCtrl.updateAnnouncement);
 router.delete('/:id', auth, announceCtrl.deleteAnnouncement);
 
 // get one announcement by id
-router.get('/:id', auth, announceCtrl.getOneAnnouncement);
+router.get('/:id', announceCtrl.getOneAnnouncement);
 
 // get all announcement middleware
-router.get('/', auth, announceCtrl.getAllAnnouncements);
+router.get('/', announceCtrl.getAllAnnouncements);
 
 module.exports = router;
