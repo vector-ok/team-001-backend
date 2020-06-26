@@ -16,6 +16,7 @@ exports.createFund = (req, res) => {
     })
     .catch((err) => {
       res.status(400).json({
+        message: 'Oops! Something went wrong.',
         err
       });
     });
@@ -37,6 +38,7 @@ exports.updateFund = (req, res) => {
     })
     .catch((error) => {
       res.status(400).json({
+        message: 'Oops! Something went wrong.',
         error
       });
     });
@@ -49,7 +51,10 @@ exports.deleteFund = (req, res) => {
         message: 'Fund deleted!'
       })
         .catch((error) => {
-          res.status(400).json({ error });
+          res.status(400).json({
+            message: 'Oops! Something went wrong.',
+            error
+          });
         });
     });
 };
@@ -63,6 +68,7 @@ exports.getOnefund = (req, res) => {
     })
     .catch((error) => {
       res.status(404).json({
+        message: 'Oops! Something went wrong.',
         error
       });
     });
@@ -75,6 +81,7 @@ exports.getAllFunds = (req, res) => {
     })
     .catch((error) => {
       res.status(400).json({
+        message: 'Oops! Something went wrong.',
         error
       });
     });

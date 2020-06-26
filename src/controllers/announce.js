@@ -21,6 +21,7 @@ exports.createAnnouncement = (req, res) => {
     })
     .catch((err) => {
       res.status(400).json({
+        message: 'Oops! Something went wrong.',
         err
       });
     });
@@ -47,6 +48,7 @@ exports.updateAnnouncement = (req, res) => {
     })
     .catch((error) => {
       res.status(400).json({
+        message: 'Oops! Something went wrong.',
         error
       });
     });
@@ -59,7 +61,10 @@ exports.deleteAnnouncement = (req, res) => {
         message: 'Announcement deleted!'
       })
         .catch((error) => {
-          res.status(400).json({ error });
+          res.status(400).json({
+            message: 'Oops! Something went wrong.',
+            error
+          });
         });
     });
 };
@@ -73,6 +78,7 @@ exports.getOneAnnouncement = (req, res) => {
     })
     .catch((error) => {
       res.status(404).json({
+        message: 'Oops! Something went wrong.',
         error
       });
     });
@@ -85,6 +91,7 @@ exports.getAllAnnouncements = (req, res) => {
     })
     .catch((error) => {
       res.status(400).json({
+        message: 'Oops! Something went wrong.',
         error
       });
     });

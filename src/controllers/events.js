@@ -31,6 +31,7 @@ exports.createEvent = (req, res) => {
     })
     .catch((err) => {
       res.status(400).json({
+        message: 'Oops! Something went wrong.',
         err
       });
     });
@@ -91,6 +92,7 @@ exports.updateEvent = (req, res) => {
     })
     .catch((error) => {
       res.status(400).json({
+        message: 'Oops! Something went wrong.',
         error
       });
     });
@@ -121,7 +123,10 @@ exports.deleteEvent = (req, res) => {
         message: 'Event deleted!'
       })
         .catch((error) => {
-          res.status(400).json({ error });
+          res.status(400).json({
+            message: 'Oops! Something went wrong.',
+            error
+          });
         });
     });
 };
@@ -135,6 +140,7 @@ exports.getOneEvent = (req, res) => {
     })
     .catch((error) => {
       res.status(404).json({
+        message: 'Oops! Something went wrong.',
         error
       });
     });
@@ -147,6 +153,7 @@ exports.getAllEvents = (req, res) => {
     })
     .catch((error) => {
       res.status(400).json({
+        message: 'Oops! Something went wrong.',
         error
       });
     });

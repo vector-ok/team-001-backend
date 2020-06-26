@@ -2,7 +2,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const UserModel = require('../models/user');
 
-exports.signup = (req, res) => {
+exports.signup = (req, res, next) => {
   bcrypt.hash(req.body.password, 10)
     .then((hash) => {
       const userModel = new UserModel({
@@ -29,11 +29,13 @@ exports.signup = (req, res) => {
         ).catch(
           (error) => {
             res.status(500).json({
+              message: 'Oops! Something went wrong.',
               error
             });
           }
         );
     });
+  next();
 };
 
 exports.login = (req, res) => {
@@ -58,11 +60,22 @@ exports.login = (req, res) => {
           );
           return res.status(200).json({
             userId: userModel._id,
+            firstName: userModel.firstName,
+            lastName: userModel.lastName,
+            phoneNumber: userModel.phoneNumber,
+            city: userModel.city,
+            orgName: userModel.orgName,
+            doBirth: userModel.doBirth,
+            sex: userModel.sex,
+            imageurl: userModel.imageUrl,
+            role: userModel.role,
+            enabled: userModel.enabled,
             token
           });
         })
         .catch((error) => {
           res.status(500).json({
+            message: 'Oops! Something went wrong.',
             error
           });
         });
