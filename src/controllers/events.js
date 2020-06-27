@@ -6,7 +6,7 @@ exports.createEvent = (req, res) => {
   // req.body.eventModel = JSON.parse(req.body.eventModel);
   const eventModel = new EventModel({
     organizerId: req.body.organizerId,
-    // sponsorId: req.body.eventModel.sponsorId,
+    sponsorId: req.body.sponsorId,
     title: req.body.title,
     description: req.body.description,
     // imageUrl: `${url}/images/${req.file.filename}`,
