@@ -11,7 +11,8 @@ exports.createAnnouncement = (req, res) => {
     admin: req.body.admin,
     trainee: req.body.trainee,
     organizer: req.body.organizer,
-    sponsor: req.body.sponsor
+    sponsor: req.body.sponsor,
+    linkedEvent: req.body.linkedEvent
   });
   announceModel.save()
     .then(() => {
@@ -38,7 +39,8 @@ exports.updateAnnouncement = (req, res) => {
     admin: req.body.admin,
     trainee: req.body.trainee,
     organizer: req.body.organizer,
-    sponsor: req.body.sponsor
+    sponsor: req.body.sponsor,
+    linkedEvent: req.body.linkedEvent
   });
   AnnounceModel.updateOne({ _id: req.params.id }, announceModel)
     .then(() => {
