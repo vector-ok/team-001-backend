@@ -68,6 +68,16 @@ exports.login = (req, res) => {
           );
           return res.status(200).json({
             adminId: adminModel._id,
+            firstName: adminModel.firstName,
+            lastName: adminModel.lastName,
+            phoneNumber: adminModel.phoneNumber,
+            city: adminModel.city,
+            orgName: adminModel.orgName,
+            doBirth: adminModel.doBirth,
+            sex: adminModel.sex,
+            imageurl: adminModel.imageUrl,
+            role: adminModel.role,
+            enabled: adminModel.enabled,
             token
           });
         })
