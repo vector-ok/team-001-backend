@@ -41,6 +41,46 @@ exports.signup = (req, res) => {
     });
 };
 
+exports.updateAdmin = (req, res) => {
+  if (req.body.role !== 'admin') {
+    return res.status(401).json({
+      error: new Error('Permission denied!')
+    });
+  }
+  return bcrypt.hash(req.body.password, 10)
+    .then((hash) => {
+      const adminModel = new AdminModel({
+        _id: req.params.id,
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        phoneNumber: req.body.phoneNumber,
+        email: req.body.email,
+        password: hash,
+        city: req.body.city,
+        dobirth: req.body.doBirth,
+        sex: req.body.sex,
+        imageurl: req.body.imageUrl,
+        role: req.body.role,
+        enabled: req.body.enabled
+      });
+      AdminModel.updateOne({ _id: req.params.id }, adminModel)
+        .then(
+          () => {
+            res.status(201).json({
+              message: 'Admin updated successfully'
+            });
+          }
+        ).catch(
+          (error) => {
+            res.status(500).json({
+              message: 'Oops! Something went wrong.',
+              error
+            });
+          }
+        );
+    });
+};
+
 exports.login = (req, res) => {
   AdminModel.findOne({ email: req.body.email })
     .then((adminModel) => {

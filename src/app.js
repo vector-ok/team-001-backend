@@ -45,7 +45,7 @@ app.use('/api/auth', adminRoute);
 
 app.use('/', (req, res) => {
   res.json({
-    message: 'This is the backend for Betalife app!'
+    message: 'You wound up in our backend default home!'
   });
 });
 
