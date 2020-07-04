@@ -1,17 +1,17 @@
 // const fs = require('fs');
 const EventModel = require('../models/eventModel');
 
-// no images`
+// no images.`
 exports.createEvent = (req, res) => {
-  // const url = `${req.protocol}://${req.get('host')}`;
-  // req.body.eventModel = JSON.parse(req.body.eventModel);
+  const url = `${req.protocol}://${req.get('host')}`;
+  req.body.eventModel = JSON.parse(req.body.eventModel);
   const eventModel = new EventModel({
     postedBy: req.body.postedBy,
     organizerId: req.body.organizerId,
     sponsorId: req.body.sponsorId,
     title: req.body.title,
     description: req.body.description,
-    // imageUrl: `${url}/images/${req.file.filename}`,
+    imageUrl: `${url}/api/images/${req.body.imageUrl}`,
     createdDate: req.body.createdDate,
     dueRegDate: req.body.dueRegDate,
     startDate: req.body.startDate,
@@ -51,7 +51,7 @@ exports.updateEvent = (req, res) => {
       sponsorId: req.body.eventModel.sponsorId,
       title: req.body.eventModel.title,
       description: req.body.eventModel.description,
-      imageUrl: `${url}/images/${req.file.filename}`,
+      imageUrl: `${url}/api/images/${req.body.imageUrl}`,
       createdDate: req.body.eventModel.createdDate,
       dueRegDate: req.body.eventModel.dueRegDate,
       startDate: req.body.eventModel.startDate,
