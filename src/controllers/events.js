@@ -4,7 +4,7 @@ const EventModel = require('../models/eventModel');
 // no images.`
 exports.createEvent = (req, res) => {
   const url = `${req.protocol}://${req.get('host')}`;
-  req.body.eventModel = JSON.parse(req.body.eventModel);
+  // req.body.eventModel = JSON.parse(req.body.eventModel);
   const eventModel = new EventModel({
     postedBy: req.body.postedBy,
     organizerId: req.body.organizerId,

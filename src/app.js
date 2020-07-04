@@ -2,7 +2,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-// const path = require('path');
+const path = require('path');
 require('dotenv').config();
 const fileupload = require('express-fileupload');
 
@@ -27,7 +27,7 @@ mongoose.connect(CONNECTION_STRING, { useNewUrlParser: true })
     console.error(error);
   });
 
-// Set headers to prevent cors error
+// Set headers to prevent cors error.
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization');
@@ -37,10 +37,7 @@ app.use((req, res, next) => {
 
 app.use(bodyParser.json());
 
-// handle images.
-// app.use('/src/images', express.static(path.join(__dirname, 'src/images')));
-
-// handle images upload.
+// handle images upload..
 app.post('/api/images', (req, res) => {
   console.log(req.files);
   const file = req.files.image;
@@ -55,6 +52,9 @@ app.post('/api/images', (req, res) => {
     });
   });
 });
+
+// Serve static images folder.
+app.use('/images', express.static(path.join(__dirname, '/images')));
 
 app.use('/api/events', eventRoute);
 app.use('/api/funds', fundRoute);
