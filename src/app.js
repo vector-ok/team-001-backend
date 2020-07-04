@@ -2,9 +2,9 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-const path = require('path');
+// const path = require('path');
 require('dotenv').config();
-// const app = async () => '#BuildforSDG'
+const fileupload = require('express-fileupload');
 
 const eventRoute = require('./routes/events');
 const fundRoute = require('./routes/funds');
@@ -13,6 +13,8 @@ const userRoute = require('./routes/user');
 const adminRoute = require('./routes/admin');
 
 const app = express();
+
+app.use(fileupload({ createParentPath: true }));
 
 const CONNECTION_STRING = process.env.STRING;
 
@@ -35,7 +37,24 @@ app.use((req, res, next) => {
 
 app.use(bodyParser.json());
 
-app.use('/images', express.static(path.join(__dirname, 'images')));
+// handle images.
+// app.use('/src/images', express.static(path.join(__dirname, 'src/images')));
+
+// handle images upload.
+app.post('/api/images', (req, res) => {
+  console.log(req.files);
+  const file = req.files.image;
+  file.mv(`images/${file.name}`, (error, result) => {
+    if (error) {
+      throw error;
+    }
+    res.send({
+      success: true,
+      message: 'File uploaded!',
+      file: result
+    });
+  });
+});
 
 app.use('/api/events', eventRoute);
 app.use('/api/funds', fundRoute);
