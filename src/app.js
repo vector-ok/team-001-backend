@@ -37,6 +37,9 @@ app.use((req, res, next) => {
 
 app.use(bodyParser.json());
 
+// handle images.
+app.use('/images', express.static(path.join(__dirname, 'images')));
+
 // handle images upload..
 app.post('/api/images', (req, res) => {
   console.log(req.files);
@@ -53,8 +56,10 @@ app.post('/api/images', (req, res) => {
   });
 });
 
-// Serve static images folder.
-app.use('/images', express.static(path.join(__dirname, '/images')));
+// app.get('/api/images/:imageUrl', (req, res) => {
+//   const imageUrl = req.params.imaageUrl;
+//   res.sendFile(`images/${imageUrl}`);
+// });
 
 app.use('/api/events', eventRoute);
 app.use('/api/funds', fundRoute);
