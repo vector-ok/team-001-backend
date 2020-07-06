@@ -3,7 +3,7 @@ const EventModel = require('../models/eventModel');
 
 // no images..`
 exports.createEvent = (req, res) => {
-  const url = `${req.protocol}://${req.get('host')}`;
+  const url = `${req.protocol}s://${req.get('host')}`;
   // req.body.eventModel = JSON.parse(req.body.eventModel);
   const eventModel = new EventModel({
     postedBy: req.body.postedBy,
@@ -42,7 +42,7 @@ exports.createEvent = (req, res) => {
 exports.updateEvent = (req, res) => {
   let eventModel = new EventModel({ _id: req.params.id });
   if (req.file) {
-    const url = `${req.protocol}://${req.get('host')}`;
+    const url = `${req.protocol}s://${req.get('host')}`;
     req.body.eventModel = JSON.parse(req.body.eventModel);
     eventModel = {
       _id: req.params.id,
@@ -51,7 +51,7 @@ exports.updateEvent = (req, res) => {
       sponsorId: req.body.eventModel.sponsorId,
       title: req.body.eventModel.title,
       description: req.body.eventModel.description,
-      imageUrl: `${url}/api/images/${req.body.imageUrl}`,
+      imageUrl: `${url}/images/${req.body.imageUrl}`,
       createdDate: req.body.eventModel.createdDate,
       dueRegDate: req.body.eventModel.dueRegDate,
       startDate: req.body.eventModel.startDate,
@@ -66,13 +66,14 @@ exports.updateEvent = (req, res) => {
       enabled: req.body.eventModel.enabled
     };
   } else {
+    const url = `${req.protocol}s://${req.get('host')}`;
     eventModel = {
       _id: req.params.id,
       organizerId: req.body.organizerId,
       sponsorId: req.body.sponsorId,
       title: req.body.title,
       description: req.body.description,
-      imageUrl: req.body.imageUrl,
+      imageUrl: `${url}/images/${req.body.imageUrl}`,
       createdDate: req.body.createdDate,
       dueRegDate: req.body.dueRegDate,
       startDate: req.body.startDate,
@@ -100,24 +101,6 @@ exports.updateEvent = (req, res) => {
       });
     });
 };
-
-// exports.deleteEvent = (req, res) => {
-//   EventModel.findOne({ _id: req.params.id })
-//     .then((eventModel) => {
-//       const filename = eventModel.imageUrl.split('/images/')[1];
-//       fs.unlink(`images/${filename}`, () => {
-//         EventModel.deleteOne({ _id: req.params.id })
-//           .then(() => {
-//             res.status(200).json({
-//               message: 'Event deleted!'
-//             })
-//               .catch((error) => {
-//                 res.status(400).json({ error });
-//               });
-//           });
-//       });
-//     });
-// };
 
 exports.deleteEvent = (req, res) => {
   EventModel.deleteOne({ _id: req.params.id })
@@ -161,3 +144,41 @@ exports.getAllEvents = (req, res) => {
       });
     });
 };
+
+// // With images. Multer configured alternative.
+// exports.createEvent = (req, res) => {
+//   const url = `${req.protocol}://${req.get('host')}`;
+//   req.body.eventModel = JSON.parse(req.body.eventModel);
+//   const eventModel = new EventModel({
+//     postedBy: req.body.eventModel.postedBy,
+//     organizerId: req.body.eventModel.organizerId,
+//     sponsorId: req.body.eventModel.sponsorId,
+//     title: req.body.eventModel.title,
+//     description: req.body.description,
+//     imageUrl: `${url}/images/${req.body.imageUrl}`,
+//     createdDate: req.body.eventModel.createdDate,
+//     dueRegDate: req.body.eventModel.dueRegDate,
+//     startDate: req.body.eventModel.startDate,
+//     endDate: req.body.eventModel.endDate,
+//     targetAudience: req.body.eventModel.targetAudience,
+//     category: req.body.eventModel.category,
+//     amountToPay: req.body.eventModel.amountToPay,
+//     paymentDetail: req.body.eventModel.paymentDetail,
+//     like: req.body.eventModel.like,
+//     location: req.body.eventModel.location,
+//     industry: req.body.eventModel.industry,
+//     enabled: req.body.eventModel.enabled
+//   });
+//   eventModel.save()
+//     .then(() => {
+//       res.status(201).json({
+//         message: 'Event post successful!'
+//       });
+//     })
+//     .catch((err) => {
+//       res.status(400).json({
+//         message: 'Oops! Something went wrong.',
+//         err
+//       });
+//     });
+// };

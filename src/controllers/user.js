@@ -38,6 +38,7 @@ exports.signup = (req, res) => {
 };
 
 exports.updateUser = (req, res) => {
+  const url = `${req.protocol}://${req.get('host')}`;
   if (req.body.role === 'admin') {
     return res.status(401).json({
       error: new Error('Log in as user!')
@@ -55,7 +56,7 @@ exports.updateUser = (req, res) => {
         city: req.body.city,
         dobirth: req.body.doBirth,
         sex: req.body.sex,
-        imageurl: req.body.imageUrl,
+        imageurl: `${url}/images/${req.body.imageUrl}`,
         role: req.body.role,
         enabled: req.body.enabled
       });

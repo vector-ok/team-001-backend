@@ -41,7 +41,7 @@ app.use(bodyParser.json());
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
 // handle images upload..
-app.post('/api/images', (req, res) => {
+app.post('/images', (req, res) => {
   console.log(req.files);
   const file = req.files.image;
   file.mv(`images/${file.name}`, (error, result) => {
