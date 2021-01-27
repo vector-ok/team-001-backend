@@ -1,11 +1,11 @@
-Backend repository for the [Betalife app] (https://betalife-frontend.netlify.app). 
+Backend repository for the [Betalife app](https://betalife-frontend.netlify.app). 
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/9a016eb72eea47f9a17050dbbbee9520)](https://app.codacy.com/gh/BuildForSDG/team-001-backend?utm_source=github.com&utm_medium=referral&utm_content=BuildForSDG/team-001-backend&utm_campaign=Badge_Grade_Settings)
 
 
 ## About
 This is the backend I created for my team on our Betalife project,
-[Betalife App] (https://betalife-frontend.netlify.app) under the BuildForSDG projects. 
+[Betalife App](https://betalife-frontend.netlify.app) under the BuildForSDG projects. 
 
 
 
