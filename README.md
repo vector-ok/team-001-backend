@@ -1,12 +1,16 @@
 Backend repository for the [Betalife app](https://betalife-frontend.netlify.app). 
-See 'Usage' for example test on the backend. 
+
+See '__Usage__' for example test on the backend. 
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/9a016eb72eea47f9a17050dbbbee9520)](https://app.codacy.com/gh/BuildForSDG/team-001-backend?utm_source=github.com&utm_medium=referral&utm_content=BuildForSDG/team-001-backend&utm_campaign=Badge_Grade_Settings)
 
 
 ## About
 This is the backend I created for my team on our Betalife project,
+This backend uses __MongoDB__ for database. 
+All features can be tested from the frontend, 
 [Betalife App](https://betalife-frontend.netlify.app) under the BuildForSDG projects. 
+See also __Example__ for testing out the RESTful API 
 
 
 
@@ -46,10 +50,7 @@ This starter uses [Parcel](https://parceljs.org/getting_started.html) as the bun
 - Run your app in local dev mode: `yarn start`. This puts the bundled app in a `dist` folder, set up a local web server at localhost:1234, and continues to watch for your code changes which it syncs with the local server. This means if you loaded the app in a browser, it will auto-refresh as you code along. Feel free to use whatever bundler best meets your needs. Parcel was only added as a sample and for those looking for a simple but effective solution to the hassle of bundlers. 
 
 ## Authors
-
 See https://betalife-frontend.netlify.app/About for all contributors for the Betalife project 
-
-
 
 
 ## Contributing
