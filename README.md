@@ -1,5 +1,5 @@
 Backend repository for the [Betalife app](https://betalife-frontend.netlify.app). 
-See 'Usage' for example test on the backend. 
+See `Usage' for example test on the backend. 
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/9a016eb72eea47f9a17050dbbbee9520)](https://app.codacy.com/gh/BuildForSDG/team-001-backend?utm_source=github.com&utm_medium=referral&utm_content=BuildForSDG/team-001-backend&utm_campaign=Badge_Grade_Settings)
 
@@ -17,7 +17,7 @@ Our Betalife project needed a database, Authentication, REST API and other backe
 ## Usage
 You can directly test the backend on https://betalife-backend.herokuapp.com
 
-** Example **
+`Example'
 See a list of all events created from frontend:
 https://betalife-backend.herokuapp.com/api/events
 
