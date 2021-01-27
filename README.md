@@ -1,4 +1,4 @@
-barebones setup for JavaScript / Node projects replace this with a one-liner phrase describing this project or app
+Backend repository for the [Betalife app] (https://betalife-frontend.netlify.app). 
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/9a016eb72eea47f9a17050dbbbee9520)](https://app.codacy.com/gh/BuildForSDG/team-001-backend?utm_source=github.com&utm_medium=referral&utm_content=BuildForSDG/team-001-backend&utm_campaign=Badge_Grade_Settings)
 
