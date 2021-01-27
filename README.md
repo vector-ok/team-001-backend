@@ -16,8 +16,9 @@ Our Betalife project needed a database, Authentication, REST API and other backe
 
 ## Usage
 You can directly test the backend on https://betalife-backend.herokuapp.com
-**Example **
-See a list of all events created from frontend. 
+
+** Example **
+See a list of all events created from frontend:
 https://betalife-backend.herokuapp.com/api/events
 
 Or visit the frontend for 
