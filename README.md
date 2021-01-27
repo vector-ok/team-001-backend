@@ -5,7 +5,7 @@ barebones setup for JavaScript / Node projects replace this with a one-liner phr
 
 ## About
 This is the backend I created for my team on our Betalife project,
-https://betalife-frontend.netlify.app under the BuildForSDG projects. 
+[Betalife App] (https://betalife-frontend.netlify.app) under the BuildForSDG projects. 
 
 
 
