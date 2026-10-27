@@ -3,16 +3,18 @@ const express = require('express');
 const router = express.Router();
 
 const auth = require('../middleware/auth');
-
 const multer = require('../middleware/multer-config');
+const unwrapEventBody = require('../middleware/eventBody');
+const { validate } = require('../middleware/validate');
+const { eventSchema, eventUpdateSchema } = require('../validation/schemas');
 
 const eventCtrl = require('../controllers/events');
 
 // post event middleware
-router.post('/', auth, multer, eventCtrl.createEvent);
+router.post('/', auth, multer, unwrapEventBody, validate(eventSchema), eventCtrl.createEvent);
 
 // update one event
-router.put('/:id', auth, multer, eventCtrl.updateEvent);
+router.put('/:id', auth, multer, unwrapEventBody, validate(eventUpdateSchema), eventCtrl.updateEvent);
 
 // delete one event
 router.delete('/:id', auth, eventCtrl.deleteEvent);

@@ -1,100 +1,46 @@
 const AnnounceModel = require('../models/announceModel');
+const { createCrudHandlers } = require('../utils/crudFactory');
 
-exports.createAnnouncement = (req, res) => {
-  const announceModel = new AnnounceModel({
-    _id: req.body.id,
-    postedBy: req.body.postedBy,
-    title: req.body.title,
-    description: req.body.description,
-    role: req.body.role,
-    createdDate: req.body.createdDate,
-    admin: req.body.admin,
-    trainee: req.body.trainee,
-    organizer: req.body.organizer,
-    sponsor: req.body.sponsor,
-    linkedEvent: req.body.linkedEvent
+const ANNOUNCEMENT_FIELDS = [
+  'postedBy',
+  'title',
+  'description',
+  'role',
+  'createdDate',
+  'admin',
+  'trainee',
+  'organizer',
+  'sponsor',
+  'linkedEvent'
+];
+
+const buildAnnouncementPayload = (req) => {
+  const payload = {};
+
+  if (req.body.id) payload._id = req.body.id;
+  ANNOUNCEMENT_FIELDS.forEach((field) => {
+    if (req.body[field] !== undefined) payload[field] = req.body[field];
   });
-  announceModel.save()
-    .then(() => {
-      res.status(201).json({
-        message: 'Announcement post successful!'
-      });
-    })
-    .catch((err) => {
-      res.status(400).json({
-        message: 'Oops! Something went wrong.',
-        err
-      });
-    });
+
+  return payload;
 };
 
-exports.updateAnnouncement = (req, res) => {
-  const announceModel = new AnnounceModel({
-    _id: req.params.id,
-    postedBy: req.body.postedBy,
-    title: req.body.title,
-    description: req.body.description,
-    role: req.body.role,
-    createdDate: req.body.createdDate,
-    admin: req.body.admin,
-    trainee: req.body.trainee,
-    organizer: req.body.organizer,
-    sponsor: req.body.sponsor,
-    linkedEvent: req.body.linkedEvent
-  });
-  AnnounceModel.updateOne({ _id: req.params.id }, announceModel)
-    .then(() => {
-      res.status(201).json({
-        message: 'Announcement updated successfully!'
-      });
-    })
-    .catch((error) => {
-      res.status(400).json({
-        message: 'Oops! Something went wrong.',
-        error
-      });
-    });
-};
+const handlers = createCrudHandlers({
+  Model: AnnounceModel,
+  resource: 'Announcement',
+  buildPayload: buildAnnouncementPayload,
+  messages: {
+    created: 'Announcement post successful!',
+    updated: 'Announcement updated successfully!',
+    deleted: 'Announcement deleted!',
+    notFound: 'Announcement not found.'
+  }
+});
 
-exports.deleteAnnouncement = (req, res) => {
-  AnnounceModel.deleteOne({ _id: req.params.id })
-    .then(() => {
-      res.status(200).json({
-        message: 'Announcement deleted!'
-      })
-        .catch((error) => {
-          res.status(400).json({
-            message: 'Oops! Something went wrong.',
-            error
-          });
-        });
-    });
-};
-
-exports.getOneAnnouncement = (req, res) => {
-  AnnounceModel.findOne({
-    _id: req.params.id
-  })
-    .then((announceResponse) => {
-      res.status(200).json(announceResponse);
-    })
-    .catch((error) => {
-      res.status(404).json({
-        message: 'Oops! Something went wrong.',
-        error
-      });
-    });
-};
-
-exports.getAllAnnouncements = (req, res) => {
-  AnnounceModel.find()
-    .then((announceResponse) => {
-      res.status(200).json(announceResponse);
-    })
-    .catch((error) => {
-      res.status(400).json({
-        message: 'Oops! Something went wrong.',
-        error
-      });
-    });
+module.exports = {
+  createAnnouncement: handlers.create,
+  updateAnnouncement: handlers.update,
+  deleteAnnouncement: handlers.remove,
+  getOneAnnouncement: handlers.getOne,
+  getAllAnnouncements: handlers.getAll
 };

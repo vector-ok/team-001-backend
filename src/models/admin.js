@@ -1,15 +1,23 @@
 const mongoose = require('mongoose');
-const uniqueValidator = require('mongoose-unique-validator');
 
 const adminSchema = mongoose.Schema({
   firstName: {
-    type: String, required: true, min: 2, max: 50
+    type: String,
+    required: true,
+    minlength: 2,
+    maxlength: 50
   },
   lastName: {
-    type: String, required: true, min: 2, max: 50
+    type: String,
+    required: true,
+    minlength: 2,
+    maxlength: 50
   },
   phoneNumber: {
-    type: Number, required: false, min: 6, max: 13
+    type: String,
+    required: false,
+    minlength: 5,
+    maxlength: 15
   },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
@@ -21,5 +29,4 @@ const adminSchema = mongoose.Schema({
   enabled: { type: Boolean, default: true }
 });
 
-adminSchema.plugin(uniqueValidator);
 module.exports = mongoose.model('AdminModel', adminSchema);

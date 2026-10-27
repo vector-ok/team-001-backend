@@ -1,88 +1,35 @@
 const FundModel = require('../models/fundModel');
+const { createCrudHandlers } = require('../utils/crudFactory');
 
-exports.createFund = (req, res) => {
-  const fundModel = new FundModel({
-    _id: req.body.id,
-    title: req.body.title,
-    description: req.body.description,
-    website: req.body.website,
-    fundingBody: req.body.fundingBody
+const FUND_FIELDS = ['title', 'description', 'website', 'fundingBody'];
+
+const buildFundPayload = (req) => {
+  const payload = {};
+
+  if (req.body.id) payload._id = req.body.id;
+  FUND_FIELDS.forEach((field) => {
+    if (req.body[field] !== undefined) payload[field] = req.body[field];
   });
-  fundModel.save()
-    .then(() => {
-      res.status(201).json({
-        message: 'Funding post successful!'
-      });
-    })
-    .catch((err) => {
-      res.status(400).json({
-        message: 'Oops! Something went wrong.',
-        err
-      });
-    });
+
+  return payload;
 };
 
-exports.updateFund = (req, res) => {
-  const fundModel = new FundModel({
-    _id: req.params.id,
-    title: req.body.title,
-    description: req.body.description,
-    website: req.body.website,
-    fundingBody: req.body.fundingBody
-  });
-  FundModel.updateOne({ _id: req.params.id }, fundModel)
-    .then(() => {
-      res.status(201).json({
-        message: 'Funding updated successfully!'
-      });
-    })
-    .catch((error) => {
-      res.status(400).json({
-        message: 'Oops! Something went wrong.',
-        error
-      });
-    });
-};
+const handlers = createCrudHandlers({
+  Model: FundModel,
+  resource: 'Fund',
+  buildPayload: buildFundPayload,
+  messages: {
+    created: 'Funding post successful!',
+    updated: 'Funding updated successfully!',
+    deleted: 'Fund deleted!',
+    notFound: 'Fund not found.'
+  }
+});
 
-exports.deleteFund = (req, res) => {
-  FundModel.deleteOne({ _id: req.params.id })
-    .then(() => {
-      res.status(200).json({
-        message: 'Fund deleted!'
-      })
-        .catch((error) => {
-          res.status(400).json({
-            message: 'Oops! Something went wrong.',
-            error
-          });
-        });
-    });
-};
-
-exports.getOnefund = (req, res) => {
-  FundModel.findOne({
-    _id: req.params.id
-  })
-    .then((fundsResponse) => {
-      res.status(200).json(fundsResponse);
-    })
-    .catch((error) => {
-      res.status(404).json({
-        message: 'Oops! Something went wrong.',
-        error
-      });
-    });
-};
-
-exports.getAllFunds = (req, res) => {
-  FundModel.find()
-    .then((fundsResponse) => {
-      res.status(200).json(fundsResponse);
-    })
-    .catch((error) => {
-      res.status(400).json({
-        message: 'Oops! Something went wrong.',
-        error
-      });
-    });
+module.exports = {
+  createFund: handlers.create,
+  updateFund: handlers.update,
+  deleteFund: handlers.remove,
+  getOnefund: handlers.getOne,
+  getAllFunds: handlers.getAll
 };

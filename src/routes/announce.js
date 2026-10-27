@@ -3,14 +3,16 @@ const express = require('express');
 const router = express.Router();
 
 const auth = require('../middleware/auth');
+const { validate } = require('../middleware/validate');
+const { announcementSchema, announcementUpdateSchema } = require('../validation/schemas');
 
 const announceCtrl = require('../controllers/announce');
 
 // post an announcement
-router.post('/', auth, announceCtrl.createAnnouncement);
+router.post('/', auth, validate(announcementSchema), announceCtrl.createAnnouncement);
 
 // update an announcement
-router.put('/:id', auth, announceCtrl.updateAnnouncement);
+router.put('/:id', auth, validate(announcementUpdateSchema), announceCtrl.updateAnnouncement);
 
 // delete one announcement
 router.delete('/:id', auth, announceCtrl.deleteAnnouncement);
