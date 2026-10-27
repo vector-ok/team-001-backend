@@ -1,11 +1,40 @@
-import app from './app';
+const http = require('http');
+const app = require('./app');
+const { config, assertConfig } = require('./config');
+const { connect, disconnect } = require('./db');
+const logger = require('./utils/logger');
 
-const startApp = async () => {
-  const header = document.querySelector('[data-app-name]');
-  if (!header) return;
+const start = async () => {
+  assertConfig();
+  await connect();
 
-  const programName = await app();
-  header.textContent = programName;
+  app.set('port', config.port);
+  const server = http.createServer(app);
+
+  await new Promise((resolve) => {
+    server.listen(config.port, resolve);
+  });
+
+  logger.info({ port: config.port, env: config.nodeEnv }, 'Betalife API is listening');
+
+  let closing = false;
+  const shutDown = (signal) => {
+    if (closing) return;
+    closing = true;
+
+    logger.info({ signal }, 'Shutting down');
+    server.close(async () => {
+      await disconnect();
+      process.exit(0);
+    });
+  };
+
+  ['SIGINT', 'SIGTERM'].forEach((signal) => {
+    process.on(signal, () => shutDown(signal));
+  });
 };
 
-document.addEventListener('DOMContentLoaded', startApp);
+start().catch((error) => {
+  logger.fatal({ err: error }, 'Unable to start the API');
+  process.exit(1);
+});

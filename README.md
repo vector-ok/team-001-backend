@@ -1,68 +1,188 @@
-barebones setup for JavaScript / Node projects replace this with a one-liner phrase describing this project or app
+# Betalife backend
 
-[![Codacy Badge](https://img.shields.io/badge/Code%20Quality-D-red)](https://img.shields.io/badge/Code%20Quality-D-red)
+REST API behind the [Betalife app](https://betalife-frontend.netlify.app). It stores events,
+funding opportunities and announcements, and handles user and admin accounts with JWT auth.
 
+Node.js + Express + MongoDB (Mongoose). No bundler, no framework magic — plain CommonJS modules.
 
-## About
+## Stack
 
-What is this project about. Ok to enrich here or the section above it with an image. 
+| Concern     | Choice                                              |
+| ----------- | --------------------------------------------------- |
+| Runtime     | Node.js 20.19+ (CI covers 20, 22 and 24)            |
+| HTTP        | Express 5                                           |
+| Database    | MongoDB via Mongoose 9                              |
+| Auth        | `jsonwebtoken` (bearer tokens) + `bcrypt` hashing    |
+| Validation  | `joi` schemas applied as middleware                  |
+| Logging     | `pino` structured JSON logs                          |
+| Tests       | Jest + Supertest + `mongodb-memory-server`           |
 
-Once this repo has been setup on Codacy by the TTL, replace the above badge with the actual one from the Codacy dashboard, and add the code coverage badge as well. This is mandatory
+## Project layout
 
-This is a simple JavaScript starter repo template for setting up your project. The setup contains
+```
+src/
+  app.js              Express app: middleware, routes, error handling (no DB connection)
+  index.js            Process entry point: config check, DB connect, HTTP server, shutdown
+  db.js               Mongoose connect/disconnect helpers
+  config/             Environment parsing and fail-fast validation
+  routes/             Route tables; attach auth, uploads and validation middleware
+  controllers/        Request/response translation only
+  services/           Password hashing, token issuing, account reads and writes
+  models/             Mongoose schemas and indexes
+  middleware/         auth, validation, upload, request logging, error handling
+  utils/              crudFactory, asyncHandler, HttpError, logger
+  validation/         Joi schemas for every writable endpoint
+__tests__/            Jest suites plus database and token helpers
+```
 
-- Jest: For runnung tests. We strongly recommend that JavaScript projects use Jest
+Layering is deliberate: routes decide who may call an endpoint, controllers shape the HTTP
+response, services own the business rules, models own persistence. Anything shared by several
+collections lives in `src/utils` instead of being copy-pasted into each controller.
 
-- Eslint & Prettier: For formatting code to match ESlint AirBnB coding standard. You might need to install the ESlint and Prettier plugins for your code editor to make the most of these utilities
+## Getting started
 
-## Why
+You need Node.js 20.19 or newer and a MongoDB instance (local or Atlas).
 
-Talk about what problem this solves, what SDG(s) and SGD targets it addresses and why these are imoirtant
+```bash
+npm install
+cp .env.example .env      # then edit the values
+npm run dev               # nodemon on http://localhost:4000
+```
 
-## Usage
- How would someone use what you have built, include URLs to the deployed app, service e.t.c when you have it setup
+Without nodemon use `npm start`. The server refuses to boot if `STRING` or `JWT_SECRET` is
+missing, so a misconfigured deploy fails immediately instead of erroring on the first request.
 
+### Environment variables
 
-## Setup
+| Name             | Required | Default       | Purpose                                          |
+| ---------------- | -------- | ------------- | ------------------------------------------------ |
+| `STRING`         | yes      | –             | MongoDB connection string                        |
+| `JWT_SECRET`     | yes      | –             | Secret used to sign and verify access tokens     |
+| `PORT`           | no       | `4000`        | HTTP port                                        |
+| `NODE_ENV`       | no       | `development` | `production` enables production behaviour        |
+| `JWT_EXPIRES_IN` | no       | `24h`         | Token lifetime                                   |
+| `LOG_LEVEL`      | no       | `info`        | Pino log level (`silent` in tests)               |
 
-Install `npm` or `yarn` if you dont have any of them already installed. We recommend Yarn though.
+## API
 
-After clonning the repo to your local machine and moving into the cloned folder, Run `yarn install` to get started by installing dependencies. 
+All request and response bodies are JSON. Timestamps are ISO 8601. Routes marked with a
+token need an `Authorization: Bearer <token>` header.
 
-`src/index.js` is the entry to the project and source code should go into the `src` folder.
+| Method | Path                            | Auth  | Description                          |
+| ------ | ------------------------------- | ----- | ------------------------------------ |
+| GET    | `/`                             | –     | Service banner                       |
+| GET    | `/health`                       | –     | Health probe with DB `readyState`    |
+| GET    | `/api/events`                   | –     | List events                          |
+| GET    | `/api/events/:id`               | –     | Single event                         |
+| POST   | `/api/events`                   | token | Create an event (multipart allowed)  |
+| PUT    | `/api/events/:id`               | token | Update an event (multipart allowed)  |
+| DELETE | `/api/events/:id`               | token | Delete an event                      |
+| GET    | `/api/funds`                    | –     | List funding opportunities           |
+| GET    | `/api/funds/:id`                | –     | Single funding opportunity           |
+| POST   | `/api/funds`                    | token | Create a funding opportunity         |
+| PUT    | `/api/funds/:id`                | token | Update a funding opportunity         |
+| DELETE | `/api/funds/:id`                | token | Delete a funding opportunity         |
+| GET    | `/api/announcement`             | –     | List announcements                   |
+| GET    | `/api/announcement/:id`         | –     | Single announcement                  |
+| POST   | `/api/announcement`             | token | Create an announcement               |
+| PUT    | `/api/announcement/:id`         | token | Update an announcement               |
+| DELETE | `/api/announcement/:id`         | token | Delete an announcement               |
+| POST   | `/api/auth/signup`              | –     | Register a user                      |
+| POST   | `/api/auth/login`               | –     | User login, returns profile + token  |
+| PUT    | `/api/auth/updateUser/:id`      | token | Update a user profile                |
+| POST   | `/api/auth/admin/signup`        | –     | Register an admin (needs `role: admin`) |
+| POST   | `/api/auth/admin/login`         | –     | Admin login, returns profile + token |
+| PUT    | `/api/auth/admin/updateAdmin/:id` | token | Update an admin profile            |
+| POST   | `/images`                       | –     | Upload an image (`image` field)      |
+| GET    | `/images/:filename`             | –     | Serve an uploaded image              |
 
-All tests should be written in the `__tests__' folder. There's a sample in there.
+### Responses and errors
 
-This starter uses [Parcel](https://parceljs.org/getting_started.html) as the bundler. It is much simpler that WebPack and the others
+Successful writes return a short confirmation, for example `{ "message": "Event post successful!" }`.
+Reads return the stored document(s). Every failure uses the same shape:
 
-#### Hints
+```json
+{ "message": "Invalid request payload.", "details": [{ "field": "email", "message": "\"email\" must be a valid email" }] }
+```
 
-- Run `npm install` or `yarn install` to get started. We'll assume you are using Yarn.
-- Install additional dependencies: `yarn add <dependency-name> [-D]`
-- Run tests: `yarn test`
-- Run tests with test coverage info: `yarn test:cover`
-- Check the codebase for proper syntax and formatting compliance: `yarn lint`
-- Run your app in local dev mode: `yarn start`. This puts the bundled app in a `dist` folder, set up a local web server at localhost:1234, and continues to watch for your code changes which it syncs with the local server. This means if you loaded the app in a browser, it will auto-refresh as you code along. Feel free to use whatever bundler best meets your needs. Parcel was only added as a sample and for those looking for a simple but effective solution to the hassle of bundlers. 
+`details` is only present for validation failures. Unexpected server errors are logged with the
+full stack and answered with a generic `Oops! Something went wrong.` so internals never leak.
 
-## Authors
+| Status | When                                              |
+| ------ | ------------------------------------------------- |
+| 400    | Validation failed, malformed id or JSON           |
+| 401    | Missing/invalid token, wrong credentials          |
+| 404    | Resource does not exist                           |
+| 409    | Duplicate unique value (for example an email)     |
+| 500    | Unexpected failure                                |
 
-List the team behind this project. Their names linked to their Github, LinkedIn, or Twitter accounts should siffice. Ok to signify the role they play in the project, including the TTL and mentor
+## Tests
+
+```bash
+npm test            # jest
+npm run test:cover  # jest with coverage, enforces the thresholds in jest.config.js
+```
+
+Suites boot a real MongoDB in memory through `mongodb-memory-server`, so no Atlas credentials
+or network access are needed. Each suite gets a clean database, model indexes are created
+before assertions run, and the app is imported without connecting to anything.
+
+The test scripts enable `--experimental-vm-modules`: the MongoDB driver loads its `os` adapter
+with a dynamic `import()`, which the default Jest sandbox cannot resolve.
+
+Coverage is collected from `src/` (excluding the bootstrap file) and CI fails below the global
+thresholds. Add a test with every behaviour change.
+
+## Scripts
+
+| Script               | What it does                                     |
+| -------------------- | ------------------------------------------------ |
+| `npm start`          | Run the API with Node                            |
+| `npm run dev`        | Run with nodemon                                 |
+| `npm test`           | Run Jest                                         |
+| `npm run test:cover` | Jest with coverage thresholds                    |
+| `npm run lint`       | ESLint over `src` and `__tests__`                |
+| `npm run format`     | Prettier write                                   |
+| `npm run format:check` | Prettier check (used by CI)                    |
+| `npm run audit`      | `npm audit --audit-level=high`                   |
+
+Pre-commit hooks run ESLint and Prettier on staged files via husky + lint-staged.
+
+## Docker
+
+```bash
+docker compose up --build
+```
+
+The compose file starts the API on port 4000 plus a MongoDB instance. To build the image alone:
+
+```bash
+docker build -t betalife-backend .
+docker run -p 4000:4000 -e STRING=mongodb://host:27017/betalife -e JWT_SECRET=... betalife-backend
+```
+
+## Deployment
+
+`Procfile` still runs `node src/index.js`. Set `STRING`, `JWT_SECRET` and `NODE_ENV=production`
+on the platform; everything else has a default. Logs are emitted as JSON on stdout, which
+Heroku, Render, Fly and friends collect without extra configuration.
+
+## CI
+
+`.github/workflows/backend.yml` runs on pushes and pull requests to `develop` and `master`:
+
+1. `npm ci` with npm caching,
+2. lint and format check,
+3. the test suite with coverage enforced,
+4. `npm audit --audit-level=high` in a separate job.
+
+Dependabot (`.github/dependabot.yml`) opens weekly dependency PRs and monthly action bumps.
 
 ## Contributing
-If this project sounds interesting to you and you'd like to contribute, thank you!
-First, you can send a mail to buildforsdg@andela.com to indicate your interest, why you'd like to support and what forms of support you can bring to the table, but here are areas we think we'd need the most help in this project :
-1.  area one (e.g this app is about human trafficking and you need feedback on your roadmap and feature list from the private sector / NGOs)
-2.  area two (e.g you want people to opt-in and try using your staging app at staging.project-name.com and report any bugs via a form)
-3.  area three (e.g here is the zoom link to our end-of sprint webinar, join and provide feedback as a stakeholder if you can)
 
-## Acknowledgements
+Keep changes small and pair them with tests. One behaviour per commit, `npm test` green before
+pushing, and update this README whenever a script, environment variable or endpoint changes.
 
-Did you use someone else’s code?
-Do you want to thank someone explicitly?
-Did someone’s blog post spark off a wonderful idea or give you a solution to nagging problem?
+## Licence
 
-It's powerful to always give credit.
-
-## LICENSE
-MIT
-
+MIT — see [LICENSE](./LICENSE).

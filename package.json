@@ -1,49 +1,78 @@
 {
-  "name": "js-starter",
-  "version": "0.0.1",
-  "description": "A boilerplate for starting js code",
-  "keywords": [
-    "js-starter",
-    "boilerplate"
-  ],
-  "private": false,
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "name": "betalife-backend",
+  "version": "1.0.0",
+  "description": "REST API for Betalife: events, funding opportunities, announcements and role aware accounts",
+  "private": true,
+  "main": "src/index.js",
   "directories": {
     "test": "__tests__"
   },
+  "engines": {
+    "node": ">=20.19.0"
+  },
   "scripts": {
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "test:cover": "jest --coverage",
-    "lint": "eslint \"src/**/*.js\"",
-    "start": "parcel ./src/index.html"
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "test:watch": "node --experimental-vm-modules node_modules/jest/bin/jest.js --watch",
+    "test:cover": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write \"src/**/*.js\" \"__tests__/**/*.js\"",
+    "format:check": "prettier --check \"src/**/*.js\" \"__tests__/**/*.js\"",
+    "audit": "npm audit --audit-level=high",
+    "prepare": "husky || true"
   },
   "author": {
     "name": "Build For SDG",
     "email": "buildforsdg@andela.com"
   },
-  "homepage": "https://github.com/BuildForSDG/js-starter#readme",
+  "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/BuildForSDG/js-starter.git"
+    "url": "git+https://github.com/vector-ok/team-001-backend.git"
   },
   "bugs": {
-    "url": "https://github.com/BuildForSDG/js-starter/issues"
+    "url": "https://github.com/vector-ok/team-001-backend/issues"
   },
-  "license": "MIT",
-  "dependencies": {},
+  "homepage": "https://github.com/vector-ok/team-001-backend#readme",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "dotenv": "^18.0.9",
+    "express": "^5.3.0",
+    "express-fileupload": "^1.5.2",
+    "joi": "^18.3.0",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.11.4",
+    "multer": "^2.5.0",
+    "pino": "^10.4.0"
+  },
   "devDependencies": {
-    "@babel/core": "^7.9.0",
-    "@babel/preset-env": "^7.9.5",
-    "babel-jest": "^25.4.0",
-    "eslint": "^6.8.0",
-    "eslint-config-airbnb-base": "^14.1.0",
-    "eslint-plugin-import": "^2.20.2",
-    "jest": "^25.4.0",
-    "parcel-bundler": "^1.12.4"
+    "@babel/core": "^7.28.0",
+    "@babel/preset-env": "^7.28.0",
+    "@eslint/js": "^9.39.0",
+    "babel-jest": "^30.5.2",
+    "eslint": "^9.39.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-import": "^2.32.0",
+    "globals": "^17.13.0",
+    "husky": "^9.1.7",
+    "jest": "^30.5.2",
+    "lint-staged": "^17.6.0",
+    "mongodb-memory-server": "^11.3.0",
+    "nodemon": "^3.1.14",
+    "prettier": "^3.9.10",
+    "supertest": "^7.3.1"
   },
-  "browserslist": [
-    "last 1 Chrome versions"
-  ]
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix",
+      "prettier --write"
+    ]
+  },
+  "config": {
+    "mongodbMemoryServer": {
+      "version": "7.0.28"
+    }
+  }
 }
