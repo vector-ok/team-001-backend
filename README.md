@@ -178,6 +178,20 @@ Heroku, Render, Fly and friends collect without extra configuration.
 
 Dependabot (`.github/dependabot.yml`) opens weekly dependency PRs and monthly action bumps.
 
+## Troubleshooting
+
+**`STRING` is the Mongo URI.** Despite the name it is not a string template — it is the
+connection string, kept for compatibility with the original Heroku config. `STRING` and
+`JWT_SECRET` are the only two variables without defaults.
+
+**The in-memory database takes a few seconds on first run.** `mongodb-memory-server` downloads
+a `mongod` binary the first time and caches it in `~/.cache/mongodb-binaries`. The version is
+pinned in `package.json` under `config.mongodbMemoryServer`, so everyone runs the same build.
+
+**The pre-commit hook needs Node on your `PATH`.** If git reports `npx: command not found`,
+your shell profile is not loading a Node version manager. Commit from a shell where
+`node -v` works, or run `npm run lint && npm run format` manually first.
+
 ## Contributing
 
 Keep changes small and pair them with tests. One behaviour per commit, `npm test` green before
